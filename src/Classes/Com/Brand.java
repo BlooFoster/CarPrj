@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 package Classes.Com;
-import java.io.*;
+
 /**
  *
  * @author PC
  */
 public class Brand {
-    
+    psvm
 }
