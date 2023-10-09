@@ -5,8 +5,6 @@
  */
 package Classes.Com;
 import java.util.*;
-//muốn lưu vào sau khi code
-//nhập thông báo 
 /**
  *
  * @author PC
