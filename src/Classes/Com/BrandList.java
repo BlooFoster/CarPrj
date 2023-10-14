@@ -90,12 +90,13 @@ public class BrandList extends ArrayList<Brand>{
         }
         return -1; // Return -1 if the brand ID is not found in the list
     }
-/*
+
     public Brand getUserChoice() {
         // TODO: Show a menu of brands, let user choose a brand from this menu
         // 💡 Tip: Use the `Menu` class
+        return new Brand();
     }
-*/
+
     public void addBrand() {
         // TODO: Add a new brand based on inputted data
         // TODO: Make sure all data are validated before adding
@@ -118,12 +119,16 @@ public class BrandList extends ArrayList<Brand>{
             brandName = brandName.replace("\n", "").replace("\r", "");
         } while (brandName.isEmpty());
         
+        System.out.println("");
+        
         do
         {
             System.out.print("Enter the sound brand: ");
             soundBrand = input.nextLine();
             soundBrand = soundBrand.replace("\n", "").replace("\r", "");
         } while (soundBrand.isEmpty());
+        
+        System.out.println("");
         
         do {
             System.out.print("Enter the price (greater than 0): ");
@@ -155,7 +160,9 @@ public class BrandList extends ArrayList<Brand>{
                 newBrandName = input.nextLine();
                 newBrandName = newBrandName.replace("\n", "").replace("\r", "");//remove enter symbol
             } while (newBrandName.isEmpty());
-        
+            
+            System.out.println("");
+            
             String newSoundBrand;
             do
             {
@@ -163,7 +170,9 @@ public class BrandList extends ArrayList<Brand>{
                 newSoundBrand = input.nextLine();
                 newSoundBrand = newSoundBrand.replace("\n", "").replace("\r", "");
             } while (newSoundBrand.isEmpty());
-
+            
+            System.out.println("");
+            
             double newPrice;
             do {
                 System.out.print("Enter the new price (greater than 0): ");
