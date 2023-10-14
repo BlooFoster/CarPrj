@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package Classes.Com;
+import java.util.*;
+import java.lang.*;
+import java.io.*;
 
 /**
  *
@@ -11,6 +14,12 @@ package Classes.Com;
  */
 public class CarList {
 
+    Brandlist brandList;
+
+    public CarList(BrandList bList){
+        brandList=bList;
+    }
+    
     public boolean loadFromFile(String filename) {
         // TODO: 1. Create an instance of File, using the file name
         // TODO: 2. Check if the file existed (optional)
@@ -28,17 +37,28 @@ public class CarList {
         // TODO: But open the file for writing instead of reading
     }
 
-    public int searchID(String ID) {
-        // TODO: Search a brand based on `carID`.
-        // TODO: Return the position if exists.
+    public int searchID(String carID) {
+        int N = this.size();
+        for (int i = 0; i < N; i++) {
+            if (this.get(i).carID.equals(carID)) return i;           
+        }        
+        return -1; 
     }
 
     public int searchFrame(String frameID) {
-        // TODO: Same as `searchID()`
+        int N = this.size();
+        for (int i = 0; i < N; i++) {
+            if (this.get(i).frameID.equals(frameID)) return i;           
+        }        
+        return -1; 
     }
 
     public int searchEngine(String engineID) {
-        // TODO: Same as `searchID()`
+        int N = this.size();
+        for (int i = 0; i < N; i++) {
+            if (this.get(i).engineID.equals(engineID)) return i;           
+        }        
+        return -1; 
     }
 
     public void addCar() {
