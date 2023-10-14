@@ -4,89 +4,208 @@
  * and open the template in the editor.
  */
 package Classes.Com;
-import java.util.*;
-import java.lang.*;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Scanner;
 
 /**
  *
  * @author PC
  */
-public class CarList {
-
-    Brandlist brandList;
-
-    public CarList(BrandList bList){
-        brandList=bList;
-    }
+public class CarList extends ArrayList<Car>{
+    BrandList brandList;
     
-    public boolean loadFromFile(String filename) {
-        // TODO: 1. Create an instance of File, using the file name
-        // TODO: 2. Check if the file existed (optional)
-        // TODO: 3. Open the file for reading
-        // TODO: 4. While reading:
-        // TODO: 4.1. Handle the string from the file, convert to data
-        // TODO: 4.2. Create a new brand from the data
-        // TODO: 4.3. Add the brand to the list
-        // TODO: 5. Close the file
-        // TODO: 6. Return `true` if reading successfully, `false` if errors happened
+    public CarList(BrandList bList){
+        brandList = bList;
     }
 
-    public boolean saveToFile(String filename) {
-        // TODO: Follow the same step as in `loadFromFile()` method
-        // TODO: But open the file for writing instead of reading
+    public boolean loadFromFile(String filename) throws FileNotFoundException {
+        File f = new File(filename);
+        if(!f.exists()) return false;
+        else {
+            try (Scanner input = new Scanner(f)) {
+                while(input.hasNextLine()){
+                    String line = input.nextLine();
+                    String[] b = line.split(",");
+                    int pos = brandList.searchID(b[1].trim());
+                    Brand brand = brandList.get(pos);
+                    Car car = new Car(b[0].trim(), brand, b[2].trim(), b[3].trim(), b[4].trim());
+                    this.add(car);
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 
-    public int searchID(String carID) {
-        int N = this.size();
-        for (int i = 0; i < N; i++) {
-            if (this.get(i).carID.equals(carID)) return i;           
-        }        
-        return -1; 
+    public boolean saveToFile(String filename) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+            for (Car car : this) {
+                writer.write(car.toString());
+                writer.newLine();
+            }
+            writer.close();
+            return true;
     }
 
-    public int searchFrame(String frameID) {
-        int N = this.size();
-        for (int i = 0; i < N; i++) {
-            if (this.get(i).frameID.equals(frameID)) return i;           
-        }        
-        return -1; 
+    public int searchID(String carID){
+        for (int i = 0; i < this.size(); i++) {
+            if(this.get(i).getCarID().equals(carID)) return i;
+        }
+        return -1;
     }
 
-    public int searchEngine(String engineID) {
-        int N = this.size();
-        for (int i = 0; i < N; i++) {
-            if (this.get(i).engineID.equals(engineID)) return i;           
-        }        
-        return -1; 
+    public int searchFrame(String frameID){
+        for (int i = 0; i < this.size(); i++) {
+            if(this.get(i).getCarID().equals(frameID)) return i;
+        }
+        return -1;
     }
 
-    public void addCar() {
-        // TODO: Add a new car based on inputted data
-        // TODO: Make sure frameID is formatted as: "F0000" and not be duplicated
-        // TODO: Make sure engineID is formatted as: "E0000" and not be duplicated
-        // TODO: Make sure all data are validated before adding
+    public int searchEngine(String engineID){
+        for (int i = 0; i < this.size(); i++) {
+            if(this.get(i).getCarID().equals(engineID)) return i;
+        }
+        return -1;
     }
 
-    public void printBasedBrandName() {
-        // TODO: 1. Let user input a part of brand name
-        // TODO: 2. Print out the `screenString()` any car whose name contains the part
-        // of brand name
-        // TODO: 3. If no car satisfies, print out the appropriate message to the user
+    public void addCar(){
+        Scanner input = new Scanner(System.in);
+        String id;
+        do {
+            System.out.println("Enter a car ID: ");
+            id = input.nextLine().trim();
+            if(searchID(id) != -1) System.out.println("Car ID exist in list!");
+        } while(searchID(id) != -1);
+        
+        Menu menu = new Menu();
+        Brand brand = (Brand)menu.ref_getChoice(brandList);
+
+        String color;
+        do {
+            System.out.println("Enter color: ");
+            color = input.nextLine().trim();
+            if(color.isEmpty()) System.out.println("Color can not be blank!");
+        } while(color.isEmpty());
+
+        String frame;
+        String pattern = "F\\d{5}";
+        do {
+            System.out.println("Enter frameID: ");
+            frame = input.nextLine().trim();
+            if(searchFrame(frame) != -1) System.out.println("FrameID exist in list!");
+            if(!frame.matches(pattern)) System.out.println("FrameID must be \"F00000\" format");
+        } while(searchFrame(frame) != -1 || !frame.matches(pattern));
+
+        String engine;
+        String pattern1 = "E\\d{5}";
+        do {
+            System.out.println("Enter engineID: ");
+            engine = input.nextLine().trim();
+            if(searchEngine(engine) != -1) System.out.println("EngineID exist in list!");
+            if(!frame.matches(pattern1)) System.out.println("EngineID must be \"E00000\" format");
+        } while(searchEngine(engine) != -1 || !engine.matches(pattern1));
+
+        Car car = new Car(id, brand, color, frame, engine);
+        this.add(car);
     }
 
-    public boolean removeCar() {
-        // TODO: Let user input the car ID, then remove if the car exists
-        // TODO: Return `true` if removed successfully, `false` if the car is not found
+    public void printBasedBrandName(){
+        Scanner input = new Scanner(System.in);
+        int count = 0;
+        String aPartOfBrandName;
+        System.out.println("Enter a part of brand name: ");
+        aPartOfBrandName = input.nextLine().trim();
+        for (int i = 0; i < this.size(); i++) {
+            if(this.get(i).getBrand().getBrandName().contains(aPartOfBrandName)) {
+                System.out.println(this.get(i).screenString());
+                count++;
+            }
+        }
+        if(count == 0) System.out.println("No car is detected!");
     }
 
-    public boolean updateCar() {
-        // TODO: Same as `removeCar()`
-        // TODO: Make sure new frameID is formatted as: "F0000" and not be duplicated
-        // TODO: Make sure new engineID is formatted as: "E0000" and not be duplicated
+    public boolean removeCar(){
+        Scanner input = new Scanner(System.in);
+        String removedID;
+        System.out.println("Enter removed ID: ");
+        removedID = input.nextLine().trim();
+        int pos = searchID(removedID);
+        if(pos < 0) {
+            System.out.println("Not found!");
+            return false;
+        }
+        else {
+            this.remove(pos);
+        }
+        return true;
     }
 
-    public void listCars() {
+    public boolean updateCar(){
+        Scanner input = new Scanner(System.in);
+        String id;
+        System.out.println("Enter ID to update: ");
+        id = input.nextLine().trim();
+        int pos = searchID(id);
+        if(pos < 0) {
+            System.out.println("Not found!");
+            return false;
+        }
+        else {
+            Menu menu = new Menu();
+            Brand brand = (Brand)menu.ref_getChoice(brandList);
 
+            String color;
+            do {
+                System.out.println("Enter color: ");
+                color = input.nextLine().trim();
+                if(color.isEmpty()) System.out.println("Color can not be blank!");
+            } while(color.isEmpty());
+
+            String frame;
+            String pattern = "F\\d{5}";
+            do {
+                System.out.println("Enter frameID: ");
+                frame = input.nextLine().trim();
+                if(searchFrame(frame) != -1) System.out.println("FrameID exist in list!");
+                if(!frame.matches(pattern)) System.out.println("FrameID must be \"F00000\" format");
+            } while(searchFrame(frame) != -1 || !frame.matches(pattern));
+
+            String engine;
+            String pattern1 = "E\\d{5}";
+            do {
+                System.out.println("Enter engineID: ");
+                engine = input.nextLine().trim();
+                if(searchEngine(engine) != -1) System.out.println("EngineID exist in list!");
+                if(!frame.matches(pattern1)) System.out.println("EngineID must be \"E00000\" format");
+            } while(searchEngine(engine) != -1 || !engine.matches(pattern1));
+
+            this.get(pos).setBrand(brand);
+            this.get(pos).setColor(color);
+            this.get(pos).setFrameID(frame);
+            this.get(pos).setEngineID(engine);
+        }
+        return true;
+    }
+
+    public void listCars(){
+        Collections.sort(this, new Comparator<Car>() {
+
+            @Override
+            public int compare(Car o1, Car o2) {
+                return o1.brand.getBrandName().compareTo(o2.brand.getBrandName());
+            }
+            
+        });
+        for (int i = 0; i < this.size(); i++) {
+            System.out.println(this.get(i).screenString());
+        }
     }
 }
