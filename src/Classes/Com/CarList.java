@@ -39,24 +39,24 @@ public class CarList {
 
     public int searchID(String carID) {
         int N = this.size();
-        for (int i = 0; i < N-1; i++) {
-            if (this.get(i).carID.equals(ID)) return i;           
+        for (int i = 0; i < N; i++) {
+            if (this.get(i).carID.equals(carID)) return i;           
         }        
         return -1; 
     }
 
     public int searchFrame(String frameID) {
         int N = this.size();
-        for (int i = 0; i < N-1; i++) {
-            if (this.get(i).frameID.equals(fID)) return i;           
+        for (int i = 0; i < N; i++) {
+            if (this.get(i).frameID.equals(frameID)) return i;           
         }        
         return -1; 
     }
 
     public int searchEngine(String engineID) {
         int N = this.size();
-        for (int i = 0; i < N-1; i++) {
-            if (this.get(i).engineID.equals(eID)) return i;           
+        for (int i = 0; i < N; i++) {
+            if (this.get(i).engineID.equals(engineID)) return i;           
         }        
         return -1; 
     }
