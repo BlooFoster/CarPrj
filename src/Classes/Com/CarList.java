@@ -77,43 +77,50 @@ public class CarList extends ArrayList<Car>{
     }
 
     public void addCar(){
-        Scanner input = new Scanner(System.in);
-        String id;
-        do {
-            System.out.println("Enter a car ID: ");
-            id = input.nextLine().trim();
-            if(searchID(id) != -1) System.out.println("Car ID exist in list!");
-        } while(searchID(id) != -1);
+        Scanner sc = new Scanner(System.in);
+        
+        String carID;
+        do{
+            sc = new Scanner(System.in);
+            System.out.print("Enter car ID: ");
+            carID = sc.nextLine();
+            if ((this.searchID(carID)==-1)&&(!carID.isEmpty())) break;
+            System.out.println("Car ID is empty or already exists. Please try again.");
+        } while(true);
         
         Menu menu = new Menu();
         Brand brand = (Brand)menu.ref_getChoice(brandList);
 
         String color;
-        do {
-            System.out.println("Enter color: ");
-            color = input.nextLine().trim();
-            if(color.isEmpty()) System.out.println("Color can not be blank!");
-        } while(color.isEmpty());
+        do{
+            System.out.print("Enter color of the car: ");
+            sc = new Scanner(System.in);
+            color = sc.nextLine();
+            if (!color.isEmpty()) break;
+            System.out.println("Color cannot be blank.");
+        } while (true);
 
-        String frame;
-        String pattern = "F\\d{5}";
-        do {
-            System.out.println("Enter frameID: ");
-            frame = input.nextLine().trim();
-            if(searchFrame(frame) != -1) System.out.println("FrameID exist in list!");
-            if(!frame.matches(pattern)) System.out.println("FrameID must be \"F00000\" format");
-        } while(searchFrame(frame) != -1 || !frame.matches(pattern));
+        String frameID;
+        do{
+            Pattern pattern = Pattern.compile("^F\\d{4}$");
+            System.out.print("Enter frameID (F0000 Format): ");
+            sc = new Scanner(System.in);
+            frameID = sc.nextLine();
+            if ((pattern.matcher(frameID).matches())&&(this.searchFrame(frameID)==-1)) break;
+            System.out.println("FrameID is not in right format or it's already exists. Please try again.");
+        }while(true);
 
-        String engine;
-        String pattern1 = "E\\d{5}";
-        do {
-            System.out.println("Enter engineID: ");
-            engine = input.nextLine().trim();
-            if(searchEngine(engine) != -1) System.out.println("EngineID exist in list!");
-            if(!frame.matches(pattern1)) System.out.println("EngineID must be \"E00000\" format");
-        } while(searchEngine(engine) != -1 || !engine.matches(pattern1));
+        String engineID;
+        do{
+            Pattern pattern = Pattern.compile("^E\\d{4}$");
+            System.out.print("Enter engineID (E0000 Format): ");
+            sc = new Scanner(System.in);
+            engineID = sc.nextLine();
+            if ((pattern.matcher(engineID).matches())&&(this.searchEngine(engineID)==-1)) break;
+            System.out.println("EngineID is not in right format or it's already exists. Please try again.");
+        }while(true);
 
-        Car car = new Car(id, brand, color, frame, engine);
+        Car car = new Car(carID, brand, color, frameID, engineID);
         this.add(car);
     }
 
