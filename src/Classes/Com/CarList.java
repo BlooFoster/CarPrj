@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 package Classes.Com;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,34 +27,45 @@ public class CarList extends ArrayList<Car>{
         brandList = bList;
     }
 
-    public boolean loadFromFile(String filename) throws FileNotFoundException {
+    public boolean loadFromFile(String filename){
         File f = new File(filename);
-        if(!f.exists()) return false;
-        else {
-            try (Scanner input = new Scanner(f)) {
-                while(input.hasNextLine()){
-                    String line = input.nextLine();
-                    String[] b = line.split(",");
-                    int pos = brandList.searchID(b[1].trim());
+        try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
+            String line;
+            while((line = reader.readLine()) != null){
+                String[] parts = line.split(",");
+                if (parts.length >= 5) {
+                    String id = parts[0].trim();
+                    int pos = brandList.searchID(parts[1].trim());
                     Brand brand = brandList.get(pos);
-                    Car car = new Car(b[0].trim(), brand, b[2].trim(), b[3].trim(), b[4].trim());
+                    String color = parts[2].trim();
+                    String frameID = parts[3].trim();
+                    String engineID = parts[4].trim();
+                    Car car = new Car(id, brand, color, frameID, engineID);
                     this.add(car);
                 }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
             }
+        } catch (FileNotFoundException e) {
+            return false;
+        } catch (IOException e) {
+            //System.out.println("Error reading the file: " + e.getMessage());
+            return false;
         }
+    
         return true;
     }
 
-    public boolean saveToFile(String filename) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+    public boolean saveToFile(String filename) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (Car car : this) {
                 writer.write(car.toString());
                 writer.newLine();
             }
             writer.close();
-            return true;
+        } catch (IOException e) {
+            System.out.println("Error writing to file: " + e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     public int searchID(String carID){
@@ -64,14 +77,14 @@ public class CarList extends ArrayList<Car>{
 
     public int searchFrame(String frameID){
         for (int i = 0; i < this.size(); i++) {
-            if(this.get(i).getCarID().equals(frameID)) return i;
+            if(this.get(i).getFrameID().equals(frameID)) return i;
         }
         return -1;
     }
 
     public int searchEngine(String engineID){
         for (int i = 0; i < this.size(); i++) {
-            if(this.get(i).getCarID().equals(engineID)) return i;
+            if(this.get(i).getEngineID().equals(engineID)) return i;
         }
         return -1;
     }
@@ -110,7 +123,7 @@ public class CarList extends ArrayList<Car>{
             System.out.println("Enter engineID: ");
             engine = input.nextLine().trim();
             if(searchEngine(engine) != -1) System.out.println("EngineID exist in list!");
-            if(!frame.matches(pattern1)) System.out.println("EngineID must be \"E00000\" format");
+            if(!engine.matches(pattern1)) System.out.println("EngineID must be \"E00000\" format");
         } while(searchEngine(engine) != -1 || !engine.matches(pattern1));
 
         Car car = new Car(id, brand, color, frame, engine);
@@ -184,7 +197,7 @@ public class CarList extends ArrayList<Car>{
                 System.out.println("Enter engineID: ");
                 engine = input.nextLine().trim();
                 if(searchEngine(engine) != -1) System.out.println("EngineID exist in list!");
-                if(!frame.matches(pattern1)) System.out.println("EngineID must be \"E00000\" format");
+                if(!engine.matches(pattern1)) System.out.println("EngineID must be \"E00000\" format");
             } while(searchEngine(engine) != -1 || !engine.matches(pattern1));
 
             this.get(pos).setBrand(brand);
@@ -200,7 +213,7 @@ public class CarList extends ArrayList<Car>{
 
             @Override
             public int compare(Car o1, Car o2) {
-                return o1.brand.getBrandName().compareTo(o2.brand.getBrandName());
+                return o1.getBrand().getBrandName().compareTo(o2.getBrand().getBrandName());
             }
             
         });
