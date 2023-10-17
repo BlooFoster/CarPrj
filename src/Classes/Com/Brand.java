@@ -1,5 +1,4 @@
 package Classes.Com;
-import java.util.*;
 // by Minh
 public class Brand{
     private String brandID;
@@ -50,7 +49,7 @@ public class Brand{
 
     @Override
     public String toString() {
-        return "Brand [brandID=" + brandID + ", brandName=" + brandName + ", soundBrand=" + soundBrand + ", price="
-                + price + "]";
+        return "< " + brandID + ", " + brandName + ", " + soundBrand + ": "
+                + price + ">";
     }
 }
