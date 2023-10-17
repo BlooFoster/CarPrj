@@ -2,7 +2,7 @@ package Classes.Com;
 public class Car {
     private String carID;
     private Brand brand;
-    private String color;   
+    private String color;
     private String frameID;
     private String engineID;
 
