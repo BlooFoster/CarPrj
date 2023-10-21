@@ -1,17 +1,12 @@
 package Classes.Com;
 
-import java.util.*;
-// by Minh
-
-public class Brand {
-
+public class Brand{
     private String brandID;
     private String brandName;
     private String soundBrand;
     private double price;
 
-    public Brand() {
-    }
+    public Brand() {}
 
     public Brand(String brandID, String brandName, String soundBrand, double price) {
         this.brandID = brandID;
@@ -54,6 +49,6 @@ public class Brand {
 
     @Override
     public String toString() {
-        return brandID + "," + brandName + "," + soundBrand + "," + price;
+        return  brandID + ", " + brandName + ", " + soundBrand + ": " + price ;
     }
 }

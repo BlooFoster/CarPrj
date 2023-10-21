@@ -1,9 +1,8 @@
 package Classes.Com;
-import java.util.*;
 public class Car {
     private String carID;
     private Brand brand;
-    private String color;   
+    private String color;
     private String frameID;
     private String engineID;
 
