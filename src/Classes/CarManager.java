@@ -28,7 +28,7 @@ public class CarManager {
         int userOption;
 
         BrandList brandList = new BrandList();
-        if (!brandList.loadFromFile("brands.txt")) {
+        if (!brandList.loadFromFile("./src/Brands.txt")) {
             System.out.println("Cannot load brands from brands.txt. The program will be terminated.");
             in.close();
             System.exit(1);
@@ -36,7 +36,7 @@ public class CarManager {
         System.out.println("Loading brands successfully!!");
 
         CarList carList = new CarList(brandList);
-        if (!carList.loadFromFile("cars.txt")) {
+        if (!carList.loadFromFile("./src/Cars.txt")) {
             System.out.println("Cannot load cars from cars.txt. The program will be terminated.");
             in.close();
             System.exit(1);
@@ -72,7 +72,7 @@ public class CarManager {
                     break;
 
                 case 5:
-                    brandList.saveToFile("brands.txt");
+                    brandList.saveToFile("./src/Brands.txt");
                     break;
 
                 case 6:
@@ -96,7 +96,7 @@ public class CarManager {
                     break;
 
                 case 11:
-                    carList.saveToFile("cars.txt");
+                    carList.saveToFile("./src/Cars.txt");
                     break;
 
                 case 12:
