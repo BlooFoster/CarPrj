@@ -5,167 +5,148 @@
  */
 package Classes.Com;
 import java.util.ArrayList;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Scanner;
+
 /**
  *
  * @author PC
  */
 
-public class BrandList extends ArrayList<Brand>{
-    public BrandList(){}
-    public boolean loadFromFile(String filename){
-        File file = new File(filename);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Split the read line into parts using comma as the delimiter
-                String[] parts = line.split(",");
+public class BrandList extends ArrayList<Brand> {
 
-                // Check if there are enough parts
-                if (parts.length >= 3) {
-                    String id = parts[0].trim();
-                    String brandName = parts[1].trim();
-                    String soundBrandAndPrice = parts[2].trim();
+    public BrandList() {
+    }
 
-                    // Split sound brand and price using colon as the delimiter
-                    String[] soundBrandAndPriceParts = soundBrandAndPrice.split(":");
-                    if (soundBrandAndPriceParts.length == 2) {
-                        String soundBrand = soundBrandAndPriceParts[0].trim();
-                        double price = Double.parseDouble(soundBrandAndPriceParts[1].trim());
-
-                        // Create a brand and add it to the list
-                        Brand brand = new Brand(id, brandName, soundBrand, price);
-                        this.add(brand);
-                    }
-                }
+    public boolean loadFromFile(String filename) {
+        try {
+            Scanner in = new Scanner(new File(filename));
+            while (in.hasNextLine()) {
+                String[] brandData = in.nextLine().split("[,:]\\s*");
+                this.add(new Brand(brandData[0], brandData[1], brandData[2], Double.parseDouble(brandData[3])));
             }
-        } catch (FileNotFoundException e){
-            return false;
-        } catch (IOException e) {
-            //System.out.println("Error reading the file: " + e.getMessage());
+            in.close();
+        } catch (Exception e) {
+            this.clear();
             return false;
         }
-    
         return true;
     }
 
-    public boolean saveToFile(String filename){
-         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            for (Brand brand : this) {
-                writer.write(brand.toString());
-                writer.newLine();
-            }
+    public boolean saveToFile(String filename) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+            StringBuffer result = new StringBuffer("");
+            this.forEach(brand -> result.append(brand.toString() + '\n'));
+            writer.write(result.toString());
             writer.close();
-        } catch (IOException e) {
-            System.out.println("Error writing to the file: " + e.getMessage());
+        } catch (Exception e) {
             return false;
         }
+        System.out.printf("Write to %s successfully!!\n", filename);
         return true;
     }
 
-    public int searchID(String bID){
+    public int searchID(String bID) {
         for (int i = 0; i < this.size(); i++) {
-            if(this.get(i).getBrandID().equals(bID)) return i;
+            if (this.get(i).getBrandID().equals(bID)) {
+                return i;
+            }
         }
         return -1;
     }
 
-    public Brand getUserChoice(){
+    public Brand getUserChoice() {
         Menu mnu = new Menu<>();
-        return (Brand)mnu.ref_getChoice(this);
+        return (Brand) mnu.ref_getChoice(this);
     }
 
-    public void addBrand(){
+    public void addBrand() {
         Scanner input = new Scanner(System.in);
         String id = "";
         do {
             System.out.println("Enter a brand ID : ");
             id = input.nextLine();
-            if(searchID(id) != -1) {
+            if (searchID(id) != -1) {
                 System.out.println("ID is exist!");
             }
         } while (searchID(id) != -1);
-        
+
         String name;
         do {
             System.out.println("Enter a brand name: ");
             name = input.nextLine();
-            if(name.isEmpty()) {
+            if (name.isEmpty()) {
                 System.out.println("Brand name can not be blank!");
             }
-        } while(name.isEmpty());
+        } while (name.isEmpty());
 
         String sound;
         do {
             System.out.println("Enter a brand sound: ");
             sound = input.nextLine();
-            if(sound.isEmpty()) {
+            if (sound.isEmpty()) {
                 System.out.println("Brand sound can not be blank!");
             }
-        } while(sound.isEmpty());
+        } while (sound.isEmpty());
 
         double price;
         do {
             System.out.println("Enter a brand price: ");
             price = input.nextDouble();
-            if(price < 0) {
+            if (price < 0) {
                 System.out.println("Brand price can not < 0");
             }
-        } while(price < 0);
+        } while (price < 0);
 
         Brand brand = new Brand(id, name, sound, price);
         this.add(brand);
     }
 
-    public void updateBrand(){
+    public void updateBrand() {
         Scanner input = new Scanner(System.in);
         String id;
         System.out.println("Enter a brand ID: ");
         id = input.nextLine();
         int pos = searchID(id);
-        if(pos < 0) {
+        if (pos < 0) {
             System.out.println("Not found!");
         } else {
             String name;
             do {
                 System.out.println("Enter new brand name: ");
                 name = input.nextLine();
-                if(name.isEmpty()) {
+                if (name.isEmpty()) {
                     System.out.println("Brand name can not be blank!");
                 }
-            } while(name.isEmpty());
+            } while (name.isEmpty());
             this.get(pos).setBrandName(name);
 
             String sound;
             do {
                 System.out.println("Enter new brand sound: ");
                 sound = input.nextLine();
-                if(sound.isEmpty()) {
+                if (sound.isEmpty()) {
                     System.out.println("Brand sound can not be blank!");
                 }
-            } while(sound.isEmpty());
+            } while (sound.isEmpty());
             this.get(pos).setSoundBrand(sound);
 
             double price;
             do {
                 System.out.println("Enter new brand price: ");
                 price = input.nextDouble();
-                if(price < 0) {
+                if (price < 0) {
                     System.out.println("Brand price can not < 0");
                 }
-            } while(price < 0);
+            } while (price < 0);
             this.get(pos).setPrice(price);
         }
     }
 
-    public void listBrands(){
+    public void listBrands() {
         int n = this.size();
         for (int i = 0; i < n; i++) {
             System.out.println(this.get(i));
