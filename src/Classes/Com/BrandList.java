@@ -25,22 +25,19 @@ public class BrandList extends ArrayList<Brand>{
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Split the read line into parts using comma as the delimiter
-                String[] parts = line.split(",");
+                // Tách thông tin bằng cách dùng dấu phẩy làm ngăn cách
+                String[] parts = line.split(", ");
 
-                // Check if there are enough parts
-                if (parts.length >= 3) {
+                if (parts.length == 3) {
                     String id = parts[0].trim();
                     String brandName = parts[1].trim();
                     String soundBrandAndPrice = parts[2].trim();
 
-                    // Split sound brand and price using colon as the delimiter
                     String[] soundBrandAndPriceParts = soundBrandAndPrice.split(":");
                     if (soundBrandAndPriceParts.length == 2) {
                         String soundBrand = soundBrandAndPriceParts[0].trim();
-                        double price = Double.parseDouble(soundBrandAndPriceParts[1].trim());
+                        double price = Double.parseDouble(soundBrandAndPriceParts[1].replaceAll(",", ".").trim());
 
-                        // Create a brand and add it to the list
                         Brand brand = new Brand(id, brandName, soundBrand, price);
                         this.add(brand);
                     }
