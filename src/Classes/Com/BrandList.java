@@ -115,14 +115,22 @@ public class BrandList extends ArrayList<Brand> {
             }
         } while (sound.isEmpty());
 
-        double price;
-        do {
-            System.out.println("Enter a brand price: ");
-            price = input.nextDouble();
-            if (price < 0) {
-                System.out.println("Brand price can not < 0");
-            }
-        } while (price < 0);
+        double price = 0;
+            boolean validPrice = false;
+            do {
+                try {
+                    System.out.println("Enter brand's price: ");
+                    price = Double.parseDouble(input.nextLine());
+                    if (price < 0) {
+                        throw new Exception("Must be non-negative value");
+                    }
+                    validPrice = true; // Input is a valid number and non-negative.
+                } catch (NumberFormatException e) {
+                    System.out.println("Must be a valid number");
+                } catch (Exception e1) {
+                    System.out.println(e1.getMessage());
+                }
+            } while (!validPrice);
 
         Brand brand = new Brand(id, name, sound, price);
         this.add(brand);
@@ -158,14 +166,22 @@ public class BrandList extends ArrayList<Brand> {
             } while (sound.isEmpty());
             this.get(pos).setSoundBrand(sound);
 
-            double price;
+            double price = 0;
+            boolean validPrice = false;
             do {
-                System.out.println("Enter new brand price: ");
-                price = input.nextDouble();
-                if (price < 0) {
-                    System.out.println("Brand price must be > 0");
+                try {
+                    System.out.println("Enter brand's price: ");
+                    price = Double.parseDouble(input.nextLine());
+                    if (price < 0) {
+                        throw new Exception("Must be non-negative value");
+                    }
+                    validPrice = true; // Input is a valid number and non-negative.
+                } catch (NumberFormatException e) {
+                    System.out.println("Must be a valid number");
+                } catch (Exception e1) {
+                    System.out.println(e1.getMessage());
                 }
-            } while (price < 0);
+            } while (!validPrice);
             this.get(pos).setPrice(price);
         }
     }
