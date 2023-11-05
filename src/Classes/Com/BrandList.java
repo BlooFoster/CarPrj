@@ -38,9 +38,11 @@ public class BrandList extends ArrayList<Brand> {
 
                     String[] soundBrandAndPriceParts = soundBrandAndPrice.split(":");
                     if (soundBrandAndPriceParts.length == 2) {
+                        
                         String soundBrand = soundBrandAndPriceParts[0].trim();
-                        String priceStr = soundBrandAndPriceParts[1].replaceAll(",", ".").trim();
+                        String priceStr = soundBrandAndPriceParts[1].trim();
                         double price = Double.parseDouble(priceStr);
+                        
                         Brand brand = new Brand(id, brandName, soundBrand, price);
                         this.add(brand);
                     }
