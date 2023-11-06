@@ -13,14 +13,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
 
 /**
  *
  * @author PC
  */
 public class BrandList extends ArrayList<Brand> {
-
+    ValidInput in = new ValidInput();
     public BrandList() {
     }
 
@@ -38,11 +37,9 @@ public class BrandList extends ArrayList<Brand> {
 
                     String[] soundBrandAndPriceParts = soundBrandAndPrice.split(":");
                     if (soundBrandAndPriceParts.length == 2) {
-                        
                         String soundBrand = soundBrandAndPriceParts[0].trim();
                         String priceStr = soundBrandAndPriceParts[1].trim();
                         double price = Double.parseDouble(priceStr);
-                        
                         Brand brand = new Brand(id, brandName, soundBrand, price);
                         this.add(brand);
                     }
@@ -51,10 +48,9 @@ public class BrandList extends ArrayList<Brand> {
         } catch (FileNotFoundException e) {
             return false;
         } catch (IOException e) {
-            //System.out.println("Error reading the file: " + e.getMessage());
+            System.out.println("Error reading the file: " + e.getMessage());
             return false;
         }
-
         return true;
     }
 
@@ -89,105 +85,37 @@ public class BrandList extends ArrayList<Brand> {
     }
 
     public void addBrand() {
-        Scanner input = new Scanner(System.in);
-        String id = "";
+        String id = in.getString("Enter brand ID: ");
         do {
-            System.out.println("Enter a brand ID : ");
-            id = input.nextLine();
-            if (searchID(id) != -1) {
+            if (searchID(id) != -1 ) 
                 System.out.println("ID is exist!");
-            }
         } while (searchID(id) != -1);
 
-        String name;
-        do {
-            System.out.println("Enter a brand name: ");
-            name = input.nextLine();
-            if (name.isEmpty()) {
-                System.out.println("Brand name can not be blank!");
-            }
-        } while (name.isEmpty());
-
-        String sound;
-        do {
-            System.out.println("Enter a brand sound: ");
-            sound = input.nextLine();
-            if (sound.isEmpty()) {
-                System.out.println("Brand sound can not be blank!");
-            }
-        } while (sound.isEmpty());
-
-        double price = 0;
-            boolean validPrice = false;
-            do {
-                try {
-                    System.out.println("Enter brand's price: ");
-                    price = Double.parseDouble(input.nextLine());
-                    if (price < 0) {
-                        throw new Exception("Must be non-negative value");
-                    }
-                    validPrice = true; // Input is a valid number and non-negative.
-                } catch (NumberFormatException e) {
-                    System.out.println("Must be a valid number");
-                } catch (Exception e1) {
-                    System.out.println(e1.getMessage());
-                }
-            } while (!validPrice);
-
+        String name = in.getString("Enter name: ");
+        String sound = in.getString("Enter sound: ");
+        double price =in.getDouble("Enter price: ");
         Brand brand = new Brand(id, name, sound, price);
         this.add(brand);
     }
 
     //Update brand_name, sound_brand, price of an existed brand.
     public void updateBrand() {
-        Scanner input = new Scanner(System.in);
-        String id;
-        System.out.println("Enter a brand ID: ");
-        id = input.nextLine();
+        String id = in.getString("Enter brand ID: ");
         int pos = searchID(id);
         if (pos < 0) {
             System.out.println("Not found!");
         } else {
-            String name;
-            do {
-                System.out.println("Enter new brand name: ");
-                name = input.nextLine();
-                if (name.isEmpty()) {
-                    System.out.println("Brand name can not be blank!");
-                }
-            } while (name.isEmpty());
+            String name = in.getString("Enter name: ");
             this.get(pos).setBrandName(name);
 
-            String sound;
-            do {
-                System.out.println("Enter new brand sound: ");
-                sound = input.nextLine();
-                if (sound.isEmpty()) {
-                    System.out.println("Brand sound can not be blank!");
-                }
-            } while (sound.isEmpty());
+            String sound = in.getString("Enter sound: ");
             this.get(pos).setSoundBrand(sound);
 
-            double price = 0;
-            boolean validPrice = false;
-            do {
-                try {
-                    System.out.println("Enter brand's price: ");
-                    price = Double.parseDouble(input.nextLine());
-                    if (price < 0) {
-                        throw new Exception("Must be non-negative value");
-                    }
-                    validPrice = true; // Input is a valid number and non-negative.
-                } catch (NumberFormatException e) {
-                    System.out.println("Must be a valid number");
-                } catch (Exception e1) {
-                    System.out.println(e1.getMessage());
-                }
-            } while (!validPrice);
+            double price = in.getDouble("Enter price: ");
             this.get(pos).setPrice(price);
         }
     }
-    
+
     //display list of brands  
     public void listBrands() {
         int n = this.size();
