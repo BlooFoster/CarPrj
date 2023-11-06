@@ -203,9 +203,7 @@ public class CarList extends ArrayList<Car> {
             System.out.println("Not found!");
             return false;
         } else {
-            Menu menu = new Menu();
-            Brand brand = (Brand) menu.ref_getChoice(brandList);
-
+            Brand brand = brandList.getUserChoice();
             String color;
             do {
                 System.out.println("Enter color: ");
