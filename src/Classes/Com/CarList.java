@@ -21,11 +21,11 @@ import java.util.Scanner;
  * @author PC
  */
 public class CarList extends ArrayList<Car> {
-    // A reference to the BrandList to associate cars with brands.
+
     BrandList brandList;
-    
+    ValidInput in= new ValidInput();
     Scanner input = new Scanner(System.in);
-    
+
     // Constructor
     public CarList(BrandList bList) {
         brandList = bList;
@@ -85,7 +85,7 @@ public class CarList extends ArrayList<Car> {
         }
         return -1;
     }
-    
+
     // Search for a car by its frame ID.
     public int searchFrame(String frameID) {
         for (int i = 0; i < this.size(); i++) {
@@ -95,7 +95,7 @@ public class CarList extends ArrayList<Car> {
         }
         return -1;
     }
-    
+
     // Search for a car by its engine ID.
     public int searchEngine(String engineID) {
         for (int i = 0; i < this.size(); i++) {
@@ -111,8 +111,7 @@ public class CarList extends ArrayList<Car> {
     public void addCar() {
         String id;
         do {
-            System.out.println("Enter a car ID: ");
-            id = input.nextLine().trim();
+            id = in.getString("Enter a car ID: ");
             if (searchID(id) != -1) {
                 System.out.println("Car ID exist in list!");
             }
@@ -121,14 +120,7 @@ public class CarList extends ArrayList<Car> {
         Menu menu = new Menu();
         Brand brand = (Brand) menu.ref_getChoice(brandList);
 
-        String color;
-        do {
-            System.out.println("Enter color: ");
-            color = input.nextLine().trim();
-            if (color.isEmpty()) {
-                System.out.println("Color can not be blank!");
-            }
-        } while (color.isEmpty());
+        String color = in.getString("Enter color: ");
 
         String frame;
         String pattern = "F\\d{5}";
@@ -164,8 +156,7 @@ public class CarList extends ArrayList<Car> {
     public void printBasedBrandName() {
         int count = 0;
         String partOfBrandName;
-        System.out.println("Enter a part of brand name: ");
-        partOfBrandName = input.nextLine().trim();
+        partOfBrandName = in.getString("Enter a part of brand name: ");
         for (int i = 0; i < this.size(); i++) {
             if (this.get(i).getBrand().getBrandName().contains(partOfBrandName)) {
                 System.out.println(this.get(i).screenString());
@@ -179,9 +170,7 @@ public class CarList extends ArrayList<Car> {
 
     // Remove a car from the CarList.
     public boolean removeCar() {
-        String removedID;
-        System.out.println("Enter removed ID: ");
-        removedID = input.nextLine().trim();
+        String removedID = in.getString("Enter removed ID: ");
         int pos = searchID(removedID);
         if (pos < 0) {
             System.err.println("Not found!");
@@ -195,29 +184,19 @@ public class CarList extends ArrayList<Car> {
 
     // Update car details in the CarList.
     public boolean updateCar() {
-        String id;
-        System.out.println("Enter ID to update: ");
-        id = input.nextLine().trim();
+        String id = in.getString("Enter ID to update: ");
         int pos = searchID(id);
         if (pos < 0) {
             System.out.println("Not found!");
             return false;
         } else {
             Brand brand = brandList.getUserChoice();
-            String color;
-            do {
-                System.out.println("Enter color: ");
-                color = input.nextLine().trim();
-                if (color.isEmpty()) {
-                    System.out.println("Color can not be blank!");
-                }
-            } while (color.isEmpty());
+            String color = in.getString("Enter color: ");
 
             String frame;
             String pattern = "F\\d{5}";
             do {
-                System.out.println("Enter frameID: ");
-                frame = input.nextLine().trim();
+                frame = in.getString("Enter frameID: ");
                 if (searchFrame(frame) != -1) {
                     System.out.println("FrameID exist in list!");
                 }
@@ -229,8 +208,7 @@ public class CarList extends ArrayList<Car> {
             String engine;
             String pattern1 = "E\\d{5}";
             do {
-                System.out.println("Enter engineID: ");
-                engine = input.nextLine().trim();
+                engine = in.getString("Enter engineID: ");
                 if (searchEngine(engine) != -1) {
                     System.out.println("EngineID exist in list!");
                 }
@@ -254,5 +232,5 @@ public class CarList extends ArrayList<Car> {
             System.out.println(car.screenString());
         }
     }
-    
+
 }
